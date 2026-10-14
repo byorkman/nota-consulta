@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nota de consulta</title>
+  <meta name="description" content="Plantilla de nota de consulta de reumatología pediátrica.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Nota de consulta</h1>
+      <p class="sub">Completá lo que haga falta y copiá la evolución</p>
+    </header>
+
+    <p class="aviso">No se guarda nada: el texto se arma en este dispositivo y se borra al cerrar la página. No hace falta poner el nombre del paciente.</p>
+
+    <form id="form" novalidate autocomplete="off">
+      <section class="panel">
+        <h2>Datos</h2>
+        <div class="fila">
+          <div class="campo"><label for="fecha">Fecha</label><input type="date" id="fecha"></div>
+          <div class="campo"><label for="tiempoEvolucion">Tiempo de evolución</label><input type="text" id="tiempoEvolucion" placeholder="Ej.: 2 años"></div>
+        </div>
+        <div class="campo">
+          <label for="diagnostico">Diagnóstico</label>
+          <input type="text" id="diagnostico" list="diagnosticos" placeholder="Elegí o escribí">
+          <datalist id="diagnosticos"></datalist>
+        </div>
+        <div class="campo"><label for="subjetivo">Motivo / evolución desde la última consulta</label><textarea id="subjetivo" rows="3"></textarea></div>
+      </section>
+
+      <section class="panel">
+        <h2>Examen</h2>
+        <div class="fila tres">
+          <div class="campo"><label for="articulaciones">Art. activas</label><input type="number" id="articulaciones" inputmode="numeric" min="0" max="71"></div>
+          <div class="campo"><label for="limitadas">Con limitación</label><input type="number" id="limitadas" inputmode="numeric" min="0" max="71"></div>
+          <div class="campo"><label for="rigidez">Rigidez (min)</label><input type="number" id="rigidez" inputmode="numeric" min="0"></div>
+        </div>
+        <div class="campo"><label for="detalleArticular">Detalle articular</label><input type="text" id="detalleArticular" placeholder="Ej.: rodilla derecha y tobillo izquierdo"></div>
+        <div class="campo"><label for="otrosHallazgos">Otros hallazgos</label><input type="text" id="otrosHallazgos" placeholder="Ej.: sin entesitis, sin rash"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Evaluaciones</h2>
+        <div class="fila">
+          <div class="campo"><label for="medico">Global médico (0-10)</label><input type="number" id="medico" inputmode="decimal" min="0" max="10" step="0.5"></div>
+          <div class="campo"><label for="paciente">Global paciente (0-10)</label><input type="number" id="paciente" inputmode="decimal" min="0" max="10" step="0.5"></div>
+          <div class="campo"><label for="vsg">VSG (mm/h)</label><input type="number" id="vsg" inputmode="numeric" min="0"></div>
+          <div class="campo"><label for="pcr">PCR (mg/L)</label><input type="number" id="pcr" inputmode="decimal" min="0" step="any"></div>
+        </div>
+        <p id="jadas" class="jadas"></p>
+        <div class="campo"><label for="oftalmologia">Último control oftalmológico</label><input type="text" id="oftalmologia" placeholder="Ej.: 08/2026, sin uveítis"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Tratamiento</h2>
+        <div class="campo"><label for="medicacion">Medicación actual</label><textarea id="medicacion" rows="2" placeholder="Ej.: MTX 15 mg/sem SC, ácido fólico"></textarea></div>
+        <div class="fila">
+          <div class="campo"><label for="tolerancia">Tolerancia</label>
+            <select id="tolerancia"><option value=""></option><option>buena</option><option>regular</option><option>mala</option></select>
+          </div>
+          <div class="campo"><label for="adherencia">Adherencia</label>
+            <select id="adherencia"><option value=""></option><option>buena</option><option>regular</option><option>mala</option></select>
+          </div>
+        </div>
+        <div class="campo"><label for="laboratorio">Laboratorio</label><textarea id="laboratorio" rows="2"></textarea></div>
+      </section>
+
+      <section class="panel">
+        <h2>Plan</h2>
+        <div class="campo"><label for="plan">Plan</label><textarea id="plan" rows="3"></textarea></div>
+        <div class="campo"><label for="proximoControl">Próximo control</label><input type="text" id="proximoControl" placeholder="Ej.: 3 meses, con laboratorio"></div>
+      </section>
+    </form>
+
+    <section class="panel salida">
+      <h2>Evolución</h2>
+      <textarea id="nota" rows="12" readonly></textarea>
+      <div class="acciones">
+        <button type="button" id="copiar" class="principal">Copiar</button>
+        <button type="button" id="limpiar">Limpiar todo</button>
+      </div>
+      <p id="estado" class="estado" aria-live="polite"></p>
+    </section>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
