@@ -1,9 +1,12 @@
 import { DIAGNOSTICOS, generarNota, jadas10 } from "./nota.js";
+import { resumen } from "./articulaciones.js";
+import { dibujar } from "./figura.js";
 
 const form = document.getElementById("form");
 const nota = document.getElementById("nota");
 const estado = document.getElementById("estado");
-const NUMERICOS = ["articulaciones", "limitadas", "rigidez", "medico", "paciente", "vsg", "pcr"];
+const NUMERICOS = ["articulaciones", "limitadas", "rigidez", "medico", "paciente", "vsg", "pcr", "peso", "talla"];
+const marcas = { activas: new Set(), limitadas: new Set() };
 
 document.getElementById("diagnosticos").innerHTML = DIAGNOSTICOS.map((d) => `<option value="${d}">`).join("");
 
@@ -13,17 +16,53 @@ function hoy() {
 }
 
 function leer() {
-  const datos = {};
+  const datos = { tipo: form.querySelector('input[name="tipo"]:checked').value };
   for (const el of form.elements) {
-    if (!el.id) continue;
+    if (!el.id || el.type === "radio") continue;
     const v = el.value.trim();
     datos[el.id] = NUMERICOS.includes(el.id) ? (v === "" ? null : Number(v.replace(",", "."))) : v;
   }
   return datos;
 }
 
+const puntos = dibujar(
+  {
+    cuerpo: document.getElementById("svg-cuerpo"),
+    manos: document.getElementById("svg-manos"),
+    pies: document.getElementById("svg-pies"),
+  },
+  (id) => {
+    const modo = form.querySelector('input[name="modo"]:checked').value;
+    const set = marcas[modo];
+    if (set.has(id)) set.delete(id);
+    else set.add(id);
+    pintarYVolcar();
+  },
+);
+
+// Pinta los puntos y vuelca el recuento y el detalle en los campos del examen.
+function pintarYVolcar() {
+  for (const [id, c] of puntos) {
+    c.classList.toggle("activa", marcas.activas.has(id));
+    c.classList.toggle("limitada", marcas.limitadas.has(id));
+    c.setAttribute("aria-pressed", marcas.activas.has(id) || marcas.limitadas.has(id));
+  }
+  const r = resumen(marcas);
+  const vacio = !r.activas && !r.limitadas;
+  document.getElementById("articulaciones").value = vacio ? "" : r.activas;
+  document.getElementById("limitadas").value = vacio ? "" : r.limitadas;
+  document.getElementById("detalleActivas").value = r.detalleActivas;
+  document.getElementById("detalleLimitadas").value = r.detalleLimitadas;
+  actualizar();
+}
+
 function actualizar() {
   const datos = leer();
+  const primera = datos.tipo === "primera";
+  document.body.classList.toggle("primera", primera);
+  document.getElementById("subjetivoLabel").textContent = primera
+    ? "Motivo de consulta"
+    : "Motivo / evolución desde la última consulta";
   nota.value = generarNota(datos);
   const j = jadas10(datos);
   document.getElementById("jadas").textContent = j
@@ -42,11 +81,19 @@ document.getElementById("copiar").addEventListener("click", async () => {
   }
 });
 
+document.getElementById("borrarArticulaciones").addEventListener("click", () => {
+  marcas.activas.clear();
+  marcas.limitadas.clear();
+  pintarYVolcar();
+});
+
 document.getElementById("limpiar").addEventListener("click", () => {
   if (!confirm("¿Borrar todos los campos?")) return;
   form.reset();
+  marcas.activas.clear();
+  marcas.limitadas.clear();
   document.getElementById("fecha").value = hoy();
-  actualizar();
+  pintarYVolcar();
 });
 
 document.getElementById("fecha").value = hoy();

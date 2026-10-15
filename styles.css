@@ -54,3 +54,30 @@ button {
 }
 button.principal { background: var(--accent); border-color: var(--accent); color: #fff; }
 .estado { margin: 0; color: var(--ok); font-size: .9rem; min-height: 1.35em; }
+:root { --activa: #d9443a; --limitada: #e8930c; --silueta: #dfe4ea; }
+@media (prefers-color-scheme: dark) { :root { --silueta: #2d3540; } }
+.segmented { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--card); }
+.segmented label { flex: 1; text-align: center; padding: 8px 4px; cursor: pointer; font-size: .95rem; }
+.segmented label + label { border-left: 1px solid var(--border); }
+.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented label:has(input:checked) { background: var(--accent); color: #fff; }
+.segmented label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -4px; }
+.solo-primera { display: none; }
+body.primera .solo-primera { display: grid; }
+.munequito { display: grid; gap: 8px; }
+.ayuda { margin: 0; color: var(--muted); font-size: .85rem; }
+.figura { width: 100%; height: auto; display: block; }
+#svg-cuerpo { max-width: 260px; margin: 0 auto; }
+.silueta { stroke: var(--silueta); stroke-linecap: round; stroke-linejoin: round; }
+.silueta-relleno { fill: var(--silueta); }
+.lado { fill: var(--muted); font-size: 11px; font-family: inherit; }
+.articulacion { fill: var(--card); stroke: var(--muted); stroke-width: 1.5; cursor: pointer; }
+.articulacion:focus { outline: none; }
+.articulacion:focus-visible { outline: none; stroke: var(--accent); stroke-width: 3; }
+.articulacion.activa { fill: var(--activa); stroke: var(--activa); }
+.articulacion.limitada { stroke: var(--limitada); stroke-width: 3.5; }
+.leyenda { display: flex; gap: 14px; align-items: center; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
+.punto { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; border: 1.5px solid var(--muted); }
+.punto.activa { background: var(--activa); border-color: var(--activa); }
+.punto.limitada { border: 3px solid var(--limitada); }
+button.chico { flex: none; margin-left: auto; padding: 4px 10px; font-size: .85rem; font-weight: 500; }

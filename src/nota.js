@@ -43,21 +43,34 @@ export function generarNota(d) {
     if (!vacio(valor)) lineas.push(etiqueta ? `${etiqueta}: ${String(valor).trim()}` : String(valor).trim());
   };
 
-  lineas.push(`EVOLUCIÓN REUMATOLOGÍA PEDIÁTRICA${vacio(d.fecha) ? "" : ` · ${fechaCorta(d.fecha)}`}`);
+  const primera = d.tipo === "primera";
+  const titulo = primera ? "PRIMERA CONSULTA REUMATOLOGÍA PEDIÁTRICA" : "EVOLUCIÓN REUMATOLOGÍA PEDIÁTRICA";
+  lineas.push(`${titulo}${vacio(d.fecha) ? "" : ` · ${fechaCorta(d.fecha)}`}`);
 
   if (!vacio(d.diagnostico)) {
-    agregar("Diagnóstico", d.diagnostico + (vacio(d.tiempoEvolucion) ? "" : ` (evolución: ${d.tiempoEvolucion.trim()})`));
+    agregar(primera ? "Diagnóstico presuntivo" : "Diagnóstico",
+      d.diagnostico.trim() + (vacio(d.tiempoEvolucion) ? "" : ` (evolución: ${d.tiempoEvolucion.trim()})`));
   }
-  agregar("Motivo / evolución", d.subjetivo);
+  const antropometria = [
+    vacio(d.peso) ? null : `Peso ${fmt(d.peso)} kg`,
+    vacio(d.talla) ? null : `Talla ${fmt(d.talla)} cm`,
+  ].filter(Boolean).join(" · ");
+  if (antropometria) agregar("", antropometria);
+  agregar(primera ? "Motivo de consulta" : "Motivo / evolución", d.subjetivo);
+  if (primera) {
+    agregar("Inicio de los síntomas", d.inicioSintomas);
+    agregar("Síntomas sistémicos", d.sintomasSistemicos);
+    agregar("Antecedentes perinatales", d.antPerinatales);
+    agregar("Antecedentes personales", d.antPersonales);
+    agregar("Antecedentes familiares", d.antFamiliares);
+    agregar("Vacunas", d.vacunas);
+  }
   if (!vacio(d.rigidez)) agregar("Rigidez matinal", `${fmt(d.rigidez)} min`);
 
-  const examen = [];
-  if (!vacio(d.articulaciones)) examen.push(`${d.articulaciones} ${d.articulaciones === 1 ? "articulación activa" : "articulaciones activas"}`);
-  if (!vacio(d.limitadas)) examen.push(`${d.limitadas} con limitación`);
-  if (examen.length || !vacio(d.detalleArticular)) {
-    const detalle = vacio(d.detalleArticular) ? "" : d.detalleArticular.trim();
-    agregar("Examen articular", examen.length ? examen.join(", ") + (detalle ? ` (${detalle})` : "") : detalle);
-  }
+  const conDetalle = (n, detalle) =>
+    [vacio(n) ? null : `${n}`, vacio(detalle) ? null : `(${detalle.trim()})`].filter(Boolean).join(" ");
+  agregar("Articulaciones activas", conDetalle(d.articulaciones, d.detalleActivas));
+  agregar("Con limitación", conDetalle(d.limitadas, d.detalleLimitadas));
   agregar("Otros hallazgos", d.otrosHallazgos);
 
   const evaluaciones = [];

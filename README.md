@@ -2,6 +2,8 @@
 
 Plantilla web para armar la evolución de una consulta de reumatología pediátrica y copiarla a la historia clínica. Pensada para usar desde el celular o la computadora del consultorio.
 
+- Modo **control** o **primera consulta** (agrega anamnesis: inicio de síntomas, síntomas sistémicos, antecedentes perinatales, personales y familiares, vacunas).
+- **Muñequito articular** con las 71 articulaciones del recuento completo: se tocan para marcarlas como activas o con limitación, y la app las cuenta y arma el detalle.
 - Formulario por secciones: datos, examen, evaluaciones, tratamiento y plan.
 - Calcula el JADAS-10 y el cJADAS-10 con los datos cargados.
 - Arma el texto de la evolución con solo las líneas que tienen datos, listo para copiar con un botón.
@@ -15,7 +17,8 @@ EVOLUCIÓN REUMATOLOGÍA PEDIÁTRICA · 14/10/2026
 Diagnóstico: AIJ poliarticular FR negativo (evolución: 2 años)
 Motivo / evolución: Refiere mejoría del dolor matinal.
 Rigidez matinal: 15 min
-Examen articular: 3 articulaciones activas, 1 con limitación (rodilla derecha, tobillo izquierdo)
+Articulaciones activas: 3 (MCF 2 der., rodilla der., tobillo izq.)
+Con limitación: 1 (rodilla der.)
 EGM 3/10 · EGP 4/10 · VSG 25 mm/h
 JADAS-10: 10,5 · cJADAS-10: 10
 Medicación: MTX 15 mg/sem SC + ácido fólico

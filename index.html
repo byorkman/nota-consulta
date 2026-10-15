@@ -17,6 +17,11 @@
     <p class="aviso">No se guarda nada: el texto se arma en este dispositivo y se borra al cerrar la página. No hace falta poner el nombre del paciente.</p>
 
     <form id="form" novalidate autocomplete="off">
+      <div class="segmented" role="radiogroup" aria-label="Tipo de consulta">
+        <label><input type="radio" name="tipo" id="tipo-control" value="control" checked> Control</label>
+        <label><input type="radio" name="tipo" id="tipo-primera" value="primera"> Primera consulta</label>
+      </div>
+
       <section class="panel">
         <h2>Datos</h2>
         <div class="fila">
@@ -28,17 +33,47 @@
           <input type="text" id="diagnostico" list="diagnosticos" placeholder="Elegí o escribí">
           <datalist id="diagnosticos"></datalist>
         </div>
-        <div class="campo"><label for="subjetivo">Motivo / evolución desde la última consulta</label><textarea id="subjetivo" rows="3"></textarea></div>
+        <div class="fila">
+          <div class="campo"><label for="peso">Peso (kg)</label><input type="number" id="peso" inputmode="decimal" min="0" step="0.1"></div>
+          <div class="campo"><label for="talla">Talla (cm)</label><input type="number" id="talla" inputmode="decimal" min="0" step="0.5"></div>
+        </div>
+        <div class="campo"><label for="subjetivo" id="subjetivoLabel">Motivo / evolución desde la última consulta</label><textarea id="subjetivo" rows="3"></textarea></div>
+      </section>
+
+      <section class="panel solo-primera">
+        <h2>Anamnesis</h2>
+        <div class="campo"><label for="inicioSintomas">Inicio de los síntomas</label><textarea id="inicioSintomas" rows="2" placeholder="Cuándo y cómo empezó, articulaciones afectadas al inicio"></textarea></div>
+        <div class="campo"><label for="sintomasSistemicos">Síntomas sistémicos</label><input type="text" id="sintomasSistemicos" placeholder="Ej.: fiebre, rash, adenopatías, pérdida de peso"></div>
+        <div class="campo"><label for="antPerinatales">Antecedentes perinatales</label><input type="text" id="antPerinatales" placeholder="Ej.: RNT, PAEG, sin complicaciones"></div>
+        <div class="campo"><label for="antPersonales">Antecedentes personales</label><textarea id="antPersonales" rows="2" placeholder="Enfermedades, internaciones, cirugías, alergias"></textarea></div>
+        <div class="campo"><label for="antFamiliares">Antecedentes familiares</label><textarea id="antFamiliares" rows="2" placeholder="Ej.: psoriasis, EII, espondiloartritis, AR, LES, tiroiditis, uveítis"></textarea></div>
+        <div class="campo"><label for="vacunas">Vacunas</label><input type="text" id="vacunas" placeholder="Ej.: calendario completo para la edad"></div>
       </section>
 
       <section class="panel">
         <h2>Examen</h2>
+        <div class="munequito">
+          <div class="modo segmented" role="radiogroup" aria-label="Qué marcar">
+            <label><input type="radio" name="modo" value="activas" checked> Activa</label>
+            <label><input type="radio" name="modo" value="limitadas"> Limitación</label>
+          </div>
+          <p class="ayuda">Tocá las articulaciones para marcarlas. Vista de frente: el lado derecho del paciente queda a tu izquierda.</p>
+          <svg id="svg-cuerpo" class="figura" viewBox="0 0 200 400" role="group" aria-label="Cuerpo"></svg>
+          <svg id="svg-manos" class="figura" viewBox="0 0 240 150" role="group" aria-label="Manos"></svg>
+          <svg id="svg-pies" class="figura" viewBox="0 0 240 122" role="group" aria-label="Pies"></svg>
+          <div class="leyenda">
+            <span><i class="punto activa"></i> Activa</span>
+            <span><i class="punto limitada"></i> Con limitación</span>
+            <button type="button" id="borrarArticulaciones" class="chico">Borrar marcas</button>
+          </div>
+        </div>
         <div class="fila tres">
           <div class="campo"><label for="articulaciones">Art. activas</label><input type="number" id="articulaciones" inputmode="numeric" min="0" max="71"></div>
           <div class="campo"><label for="limitadas">Con limitación</label><input type="number" id="limitadas" inputmode="numeric" min="0" max="71"></div>
           <div class="campo"><label for="rigidez">Rigidez (min)</label><input type="number" id="rigidez" inputmode="numeric" min="0"></div>
         </div>
-        <div class="campo"><label for="detalleArticular">Detalle articular</label><input type="text" id="detalleArticular" placeholder="Ej.: rodilla derecha y tobillo izquierdo"></div>
+        <div class="campo"><label for="detalleActivas">Detalle activas</label><input type="text" id="detalleActivas" placeholder="Se completa al tocar el muñequito"></div>
+        <div class="campo"><label for="detalleLimitadas">Detalle con limitación</label><input type="text" id="detalleLimitadas" placeholder="Se completa al tocar el muñequito"></div>
         <div class="campo"><label for="otrosHallazgos">Otros hallazgos</label><input type="text" id="otrosHallazgos" placeholder="Ej.: sin entesitis, sin rash"></div>
       </section>
 
