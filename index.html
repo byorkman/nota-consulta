@@ -16,7 +16,7 @@
     <header>
       <a class="portal" href="https://reumapedia.vercel.app/" target="_blank" rel="noopener" title="Se abre en otra pestaña para no perder la nota"><img src="img/logo.svg" alt="" width="20" height="20">ReumaPedia</a>
       <h1>Nota de consulta</h1>
-      <p class="sub">Completá lo que haga falta y copiá la evolución</p>
+      <p class="sub">Completar lo necesario y copiar la evolución</p>
     </header>
 
     <p class="aviso">No se guarda nada: el texto se arma en este dispositivo y se borra al cerrar la página. No hace falta poner el nombre del paciente.</p>
@@ -35,8 +35,8 @@
         </div>
         <div class="campo">
           <label for="diagnostico">Diagnóstico</label>
-          <input type="text" id="diagnostico" list="diagnosticos" placeholder="Elegí o escribí">
-          <datalist id="diagnosticos"></datalist>
+          <select id="diagnostico"></select>
+          <input type="text" id="diagnosticoOtro" placeholder="Escribir el diagnóstico" aria-label="Otro diagnóstico" hidden>
         </div>
         <div class="fila">
           <div class="campo"><label for="peso">Peso (kg)</label><input type="number" id="peso" inputmode="decimal" min="0" step="0.1"></div>
@@ -62,7 +62,7 @@
             <label><input type="radio" name="modo" value="activas" checked> Activa</label>
             <label><input type="radio" name="modo" value="limitadas"> Limitación</label>
           </div>
-          <p class="ayuda">Tocá las articulaciones para marcarlas. Vista de frente: el lado derecho del paciente queda a tu izquierda.</p>
+          <p class="ayuda">Tocar las articulaciones para marcarlas. Vista de frente: el lado derecho del paciente queda a la izquierda de la pantalla.</p>
           <svg id="svg-cuerpo" class="figura" viewBox="0 0 200 400" role="group" aria-label="Cuerpo"></svg>
           <svg id="svg-manos" class="figura" viewBox="0 0 240 150" role="group" aria-label="Manos"></svg>
           <svg id="svg-pies" class="figura" viewBox="0 0 240 122" role="group" aria-label="Pies"></svg>
