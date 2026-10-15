@@ -81,3 +81,16 @@ body.primera .solo-primera { display: grid; }
 .punto.activa { background: var(--activa); border-color: var(--activa); }
 .punto.limitada { border: 3px solid var(--limitada); }
 button.chico { flex: none; margin-left: auto; padding: 4px 10px; font-size: .85rem; font-weight: 500; }
+
+.portal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+.portal::before { content: "←"; }
+.portal img { border-radius: 5px; }
+.portal:hover { color: var(--text); }
