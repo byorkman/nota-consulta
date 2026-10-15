@@ -26,7 +26,8 @@ test("nota completa incluye todas las secciones en orden", () => {
     rigidez: 15,
     articulaciones: 3,
     limitadas: 1,
-    detalleArticular: "rodilla derecha",
+    detalleActivas: "rodilla der., tobillo izq., MCF 2 der.",
+    detalleLimitadas: "rodilla der.",
     medico: 3,
     paciente: 4,
     vsg: 25,
@@ -43,7 +44,8 @@ test("nota completa incluye todas las secciones en orden", () => {
     "Diagnóstico: AIJ poliarticular FR negativo (evolución: 2 años)",
     "Motivo / evolución: Mejoría del dolor.",
     "Rigidez matinal: 15 min",
-    "Examen articular: 3 articulaciones activas, 1 con limitación (rodilla derecha)",
+    "Articulaciones activas: 3 (rodilla der., tobillo izq., MCF 2 der.)",
+    "Con limitación: 1 (rodilla der.)",
     "EGM 3/10 · EGP 4/10 · VSG 25 mm/h · PCR 2,5 mg/L",
     "JADAS-10: 10,5 · cJADAS-10: 10",
     "Último control oftalmológico: 08/2026, sin uveítis",
@@ -54,7 +56,32 @@ test("nota completa incluye todas las secciones en orden", () => {
   ].join("\n"));
 });
 
-test("singular para una articulación y cero articulaciones se muestra", () => {
-  assert.match(generarNota({ articulaciones: 1 }), /1 articulación activa/);
-  assert.match(generarNota({ articulaciones: 0 }), /0 articulaciones activas/);
+test("cero articulaciones activas se muestra", () => {
+  assert.match(generarNota({ articulaciones: 0 }), /Articulaciones activas: 0/);
+});
+
+test("primera consulta cambia el título e incluye la anamnesis", () => {
+  const texto = generarNota({
+    tipo: "primera",
+    diagnostico: "AIJ oligoarticular persistente",
+    peso: 24.5,
+    talla: 125,
+    subjetivo: "Tumefacción de rodilla.",
+    inicioSintomas: "Hace 2 meses.",
+    antFamiliares: "Madre con psoriasis.",
+    vacunas: "Completas.",
+  });
+  assert.equal(texto, [
+    "PRIMERA CONSULTA REUMATOLOGÍA PEDIÁTRICA",
+    "Diagnóstico presuntivo: AIJ oligoarticular persistente",
+    "Peso 24,5 kg · Talla 125 cm",
+    "Motivo de consulta: Tumefacción de rodilla.",
+    "Inicio de los síntomas: Hace 2 meses.",
+    "Antecedentes familiares: Madre con psoriasis.",
+    "Vacunas: Completas.",
+  ].join("\n"));
+});
+
+test("en control no aparece la anamnesis aunque haya datos", () => {
+  assert.doesNotMatch(generarNota({ tipo: "control", antFamiliares: "x" }), /Antecedentes/);
 });
