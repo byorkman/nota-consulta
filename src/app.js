@@ -8,7 +8,14 @@ const estado = document.getElementById("estado");
 const NUMERICOS = ["articulaciones", "limitadas", "rigidez", "medico", "paciente", "vsg", "pcr", "peso", "talla"];
 const marcas = { activas: new Set(), limitadas: new Set() };
 
-document.getElementById("diagnosticos").innerHTML = DIAGNOSTICOS.map((d) => `<option value="${d}">`).join("");
+const OTRO = "__otro";
+const diagnostico = document.getElementById("diagnostico");
+const diagnosticoOtro = document.getElementById("diagnosticoOtro");
+diagnostico.innerHTML = [
+  `<option value="">Seleccionar…</option>`,
+  ...DIAGNOSTICOS.map((d) => `<option value="${d}">${d}</option>`),
+  `<option value="${OTRO}">Otro…</option>`,
+].join("");
 
 function hoy() {
   const d = new Date();
@@ -22,6 +29,7 @@ function leer() {
     const v = el.value.trim();
     datos[el.id] = NUMERICOS.includes(el.id) ? (v === "" ? null : Number(v.replace(",", "."))) : v;
   }
+  datos.diagnostico = datos.diagnostico === OTRO ? datos.diagnosticoOtro : datos.diagnostico;
   return datos;
 }
 
@@ -60,6 +68,7 @@ function actualizar() {
   const datos = leer();
   const primera = datos.tipo === "primera";
   document.body.classList.toggle("primera", primera);
+  diagnosticoOtro.hidden = diagnostico.value !== OTRO;
   document.getElementById("subjetivoLabel").textContent = primera
     ? "Motivo de consulta"
     : "Motivo / evolución desde la última consulta";
@@ -74,7 +83,7 @@ function actualizar() {
 document.getElementById("copiar").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(nota.value);
-    estado.textContent = "Copiado. Ya lo podés pegar en la historia clínica.";
+    estado.textContent = "Copiado. Ya se puede pegar en la historia clínica.";
   } catch {
     nota.select();
     estado.textContent = "No se pudo copiar automáticamente: el texto quedó seleccionado para copiarlo a mano.";
@@ -97,6 +106,12 @@ document.getElementById("limpiar").addEventListener("click", () => {
 });
 
 document.getElementById("fecha").value = hoy();
+diagnostico.addEventListener("change", () => {
+  if (diagnostico.value === OTRO) {
+    diagnosticoOtro.hidden = false;
+    diagnosticoOtro.focus();
+  }
+});
 form.addEventListener("input", actualizar);
 form.addEventListener("change", actualizar);
 actualizar();

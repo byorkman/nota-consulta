@@ -94,3 +94,4 @@ button.chico { flex: none; margin-left: auto; padding: 4px 10px; font-size: .85r
 .portal::before { content: "←"; }
 .portal img { border-radius: 5px; }
 .portal:hover { color: var(--text); }
+#diagnosticoOtro { margin-top: 6px; }
