@@ -56,10 +56,10 @@ button.principal { background: var(--accent); border-color: var(--accent); color
 .estado { margin: 0; color: var(--ok); font-size: .9rem; min-height: 1.35em; }
 :root { --activa: #d9443a; --limitada: #e8930c; --silueta: #dfe4ea; }
 @media (prefers-color-scheme: dark) { :root { --silueta: #2d3540; } }
-.segmented { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--card); }
+.segmented { position: relative; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--card); }
 .segmented label { flex: 1; text-align: center; padding: 8px 4px; cursor: pointer; font-size: .95rem; }
 .segmented label + label { border-left: 1px solid var(--border); }
-.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented input { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; margin: 0; padding: 0; }
 .segmented label:has(input:checked) { background: var(--accent); color: #fff; }
 .segmented label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -4px; }
 .solo-primera { display: none; }
