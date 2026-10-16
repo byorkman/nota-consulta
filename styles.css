@@ -120,3 +120,7 @@ body.primera .solo-control { display: none; }
 .frases { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -4px; }
 button.frase { flex: none; padding: 3px 10px; font-size: .82rem; font-weight: 500; border-radius: 999px; color: var(--muted); }
 button.frase:hover { color: var(--text); border-color: var(--muted); }
+
+footer { color: var(--muted); font-size: .85rem; }
+footer p { margin: 0; }
+.version { opacity: .75; }

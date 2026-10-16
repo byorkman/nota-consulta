@@ -43,6 +43,15 @@ npm test               # pruebas
 npx serve .            # o cualquier servidor estático para verlo localmente
 ```
 
+## Versión
+
+La versión se ve al pie de la página. En cada cambio:
+
+1. Agregar arriba en [`CHANGELOG.md`](CHANGELOG.md) una entrada `## X.Y.Z · día mes año` con lo que cambió.
+2. Poner el mismo número en `package.json` y el mismo texto (`vX.Y.Z · día mes año`) en el pie de `index.html`.
+
+Se sube el último número para arreglos y textos, el del medio para funciones nuevas y el primero para cambios grandes. `npm test` avisa si los tres lugares no coinciden.
+
 ## Publicar en Vercel
 
 En Vercel: **Add New → Project → Import** este repositorio, con Framework Preset **Other** y sin comando de build. Cada cambio que entre a `main` se publica solo.
