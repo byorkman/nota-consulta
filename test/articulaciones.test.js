@@ -26,3 +26,15 @@ test("resumen cuenta activas y limitadas por separado", () => {
   assert.equal(r.detalleActivas, "rodilla der., tobillo izq.");
   assert.equal(r.detalleLimitadas, "rodilla der.");
 });
+
+test("entesis y dedos se describen por lado", async () => {
+  const { ENTESIS, DEDOS, dedoDe, describirEntesis, describirDactilitis } = await import("../src/articulaciones.js");
+  assert.equal(ENTESIS.length, 12);
+  assert.equal(DEDOS.length, 20);
+  assert.equal(describirEntesis(["ent-aquiles-D", "ent-aquiles-I"]), "inserción del tendón de Aquiles bilateral");
+  assert.equal(describirDactilitis(["dedo-pie2-D", "dedo-mano3-I"]), "dedo de la mano 3 izq., dedo del pie 2 der.");
+  assert.equal(dedoDe("ifp3-D"), "dedo-mano3-D");
+  assert.equal(dedoDe("ifp1-I"), "dedo-mano1-I");
+  assert.equal(dedoDe("mtf4-I"), "dedo-pie4-I");
+  assert.equal(dedoDe("rodilla-D"), null);
+});

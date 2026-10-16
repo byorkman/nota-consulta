@@ -1,5 +1,5 @@
 // Dibuja las siluetas y los puntos de las articulaciones en los SVG.
-import { ARTICULACIONES, describir } from "./articulaciones.js";
+import { ARTICULACIONES, ENTESIS, DEDOS, describir, describirEntesis, describirDactilitis } from "./articulaciones.js";
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -54,27 +54,69 @@ function pies(svg) {
   }
 }
 
-// Devuelve un mapa id -> <circle> para poder pintarlos.
+// Recorrido de cada dedo en el dibujo, para resaltar la dactilitis.
+function recorridoDedo(d) {
+  const x = (v) => (d.lado === "D" ? v : 240 - v);
+  if (d.vista === "manos") {
+    if (d.numero === 1) return [[x(24), 100], [x(10), 76], [x(5), 64]];
+    const px = { 2: 36, 3: 54, 4: 72, 5: 90 }[d.numero];
+    return [[x(px), 84], [x(px), 20]];
+  }
+  const px = { 1: 100, 2: 84, 3: 68, 4: 52, 5: 36 }[d.numero];
+  return [[x(px), 52], [x(px), 18]];
+}
+
+function tocable(nodo, descripcion, alTocar) {
+  const titulo = el("title", {});
+  titulo.textContent = descripcion;
+  nodo.append(titulo);
+  nodo.setAttribute("tabindex", 0);
+  nodo.setAttribute("role", "button");
+  nodo.addEventListener("click", alTocar);
+  nodo.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      alTocar();
+    }
+  });
+}
+
+// Devuelve un mapa id -> elemento (círculo, rombo o dedo) para poder pintarlos,
+// y otro id -> anillo de la consulta anterior.
 export function dibujar(svgs, alTocar) {
   cuerpo(svgs.cuerpo);
   manos(svgs.manos);
   pies(svgs.pies);
   const puntos = new Map();
+  const anillos = new Map();
+  for (const d of DEDOS) {
+    const p = el("polyline", {
+      points: recorridoDedo(d).map((q) => q.join(",")).join(" "),
+      class: "dedo", fill: "none",
+    });
+    tocable(p, `dactilitis: ${describirDactilitis([d.id])}`, () => alTocar(d.id));
+    svgs[d.vista].append(p);
+    puntos.set(d.id, p);
+  }
   for (const a of ARTICULACIONES) {
     const r = a.vista === "cuerpo" ? 7 : 6;
-    const c = el("circle", { cx: a.x, cy: a.y, r, class: "articulacion", tabindex: 0, role: "button" });
-    const titulo = el("title", {});
-    titulo.textContent = describir([a.id]);
-    c.append(titulo);
-    c.addEventListener("click", () => alTocar(a.id));
-    c.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        alTocar(a.id);
-      }
-    });
+    const anillo = el("circle", { cx: a.x, cy: a.y, r: r + 3.5, class: "previa" });
+    svgs[a.vista].append(anillo);
+    anillos.set(a.id, anillo);
+    const c = el("circle", { cx: a.x, cy: a.y, r, class: "articulacion" });
+    tocable(c, describir([a.id]), () => alTocar(a.id));
     svgs[a.vista].append(c);
     puntos.set(a.id, c);
   }
-  return puntos;
+  for (const e of ENTESIS) {
+    const t = 5;
+    const rombo = el("polygon", {
+      points: [[e.x, e.y - t], [e.x + t, e.y], [e.x, e.y + t], [e.x - t, e.y]].map((q) => q.join(",")).join(" "),
+      class: "entesis",
+    });
+    tocable(rombo, `entesis: ${describirEntesis([e.id])}`, () => alTocar(e.id));
+    svgs[e.vista].append(rombo);
+    puntos.set(e.id, rombo);
+  }
+  return { puntos, anillos };
 }

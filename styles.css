@@ -95,3 +95,28 @@ button.chico { flex: none; margin-left: auto; padding: 4px 10px; font-size: .85r
 .portal img { border-radius: 5px; }
 .portal:hover { color: var(--text); }
 #diagnosticoOtro { margin-top: 6px; }
+
+/* Entesitis, dactilitis y consulta anterior */
+:root { --entesis: #8e44ad; --dactilitis: #1f9e8f; }
+.entesis { fill: var(--card); stroke: var(--entesis); stroke-width: 1.5; cursor: pointer; }
+.entesis:focus { outline: none; }
+.entesis:focus-visible { stroke-width: 3; }
+.entesis.marcada { fill: var(--entesis); }
+.munequito:not([data-modo="entesis"]) .entesis:not(.marcada) { display: none; }
+.dedo { stroke: transparent; stroke-width: 15; stroke-linecap: round; pointer-events: none; cursor: pointer; }
+.dedo:focus { outline: none; }
+.munequito[data-modo="dactilitis"] .dedo { pointer-events: stroke; stroke: var(--dactilitis); stroke-opacity: .12; }
+.dedo.marcada, .munequito[data-modo="dactilitis"] .dedo.marcada { stroke: var(--dactilitis); stroke-opacity: .5; }
+.previa { fill: none; stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 3 2.5; display: none; pointer-events: none; }
+.previa.visible { display: inline; }
+.rombo { display: inline-block; width: 9px; height: 9px; background: var(--entesis); transform: rotate(45deg); margin: 0 2px; }
+.barra { display: inline-block; width: 6px; height: 14px; border-radius: 3px; background: var(--dactilitis); opacity: .6; vertical-align: -2px; }
+.punto.anillo-previo { border: 1.5px dashed var(--text); background: none; }
+.solo-previa { display: none; }
+body.con-previa .solo-previa { display: inline; }
+body.primera .solo-control { display: none; }
+.munequito .acciones { justify-content: flex-end; }
+.munequito .modo label { font-size: .88rem; padding: 8px 2px; }
+.frases { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -4px; }
+button.frase { flex: none; padding: 3px 10px; font-size: .82rem; font-weight: 500; border-radius: 999px; color: var(--muted); }
+button.frase:hover { color: var(--text); border-color: var(--muted); }

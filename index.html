@@ -43,6 +43,7 @@
           <div class="campo"><label for="talla">Talla (cm)</label><input type="number" id="talla" inputmode="decimal" min="0" step="0.5"></div>
         </div>
         <div class="campo"><label for="subjetivo" id="subjetivoLabel">Motivo / evolución desde la última consulta</label><textarea id="subjetivo" rows="3"></textarea></div>
+        <div class="frases" data-campo="subjetivo"></div>
       </section>
 
       <section class="panel solo-primera">
@@ -57,20 +58,34 @@
 
       <section class="panel">
         <h2>Examen</h2>
-        <div class="munequito">
+        <div class="campo solo-control">
+          <label for="codigoPrevio">Código de la consulta anterior (opcional)</label>
+          <input type="text" id="codigoPrevio" placeholder="Pegar el código del final de la nota anterior" spellcheck="false">
+          <p id="previaEstado" class="ayuda"></p>
+        </div>
+        <div class="munequito" id="munequito">
           <div class="modo segmented" role="radiogroup" aria-label="Qué marcar">
             <label><input type="radio" name="modo" value="activas" checked> Activa</label>
             <label><input type="radio" name="modo" value="limitadas"> Limitación</label>
+            <label><input type="radio" name="modo" value="entesis"> Entesitis</label>
+            <label><input type="radio" name="modo" value="dactilitis"> Dactilitis</label>
           </div>
-          <p class="ayuda">Tocar las articulaciones para marcarlas. Vista de frente: el lado derecho del paciente queda a la izquierda de la pantalla.</p>
+          <p class="ayuda" id="ayudaModo"></p>
           <svg id="svg-cuerpo" class="figura" viewBox="0 0 200 400" role="group" aria-label="Cuerpo"></svg>
           <svg id="svg-manos" class="figura" viewBox="0 0 240 150" role="group" aria-label="Manos"></svg>
           <svg id="svg-pies" class="figura" viewBox="0 0 240 122" role="group" aria-label="Pies"></svg>
           <div class="leyenda">
             <span><i class="punto activa"></i> Activa</span>
             <span><i class="punto limitada"></i> Con limitación</span>
+            <span><i class="rombo"></i> Entesitis</span>
+            <span><i class="barra"></i> Dactilitis</span>
+            <span class="solo-previa"><i class="punto anillo-previo"></i> Activa en la consulta anterior</span>
+          </div>
+          <div class="acciones">
+            <button type="button" id="copiarDibujo" class="chico">Copiar dibujo</button>
             <button type="button" id="borrarArticulaciones" class="chico">Borrar marcas</button>
           </div>
+          <p id="dibujoEstado" class="estado" aria-live="polite"></p>
         </div>
         <div class="fila tres">
           <div class="campo"><label for="articulaciones">Art. activas</label><input type="number" id="articulaciones" inputmode="numeric" min="0" max="71"></div>
@@ -79,8 +94,15 @@
         </div>
         <div class="campo"><label for="detalleActivas">Detalle activas</label><input type="text" id="detalleActivas" placeholder="Se completa al tocar el muñequito"></div>
         <div class="campo"><label for="detalleLimitadas">Detalle con limitación</label><input type="text" id="detalleLimitadas" placeholder="Se completa al tocar el muñequito"></div>
-        <div class="campo"><label for="otrosHallazgos">Otros hallazgos</label><input type="text" id="otrosHallazgos" placeholder="Ej.: sin entesitis, sin rash"></div>
+        <div class="fila">
+          <div class="campo"><label for="entesitis">Entesitis</label><input type="text" id="entesitis" placeholder="Se completa al tocar el muñequito"></div>
+          <div class="campo"><label for="dactilitis">Dactilitis</label><input type="text" id="dactilitis" placeholder="Se completa al tocar el muñequito"></div>
+        </div>
+        <div class="campo"><label for="otrosHallazgos">Otros hallazgos</label><input type="text" id="otrosHallazgos" placeholder="Ej.: sin rash, sin adenopatías"></div>
+        <div class="frases" data-campo="otrosHallazgos"></div>
       </section>
+
+      <section class="panel" id="especifico" hidden></section>
 
       <section class="panel">
         <h2>Evaluaciones</h2>
@@ -91,7 +113,14 @@
           <div class="campo"><label for="pcr">PCR (mg/L)</label><input type="number" id="pcr" inputmode="decimal" min="0" step="any"></div>
         </div>
         <p id="jadas" class="jadas"></p>
+        <div class="fila">
+          <div class="campo"><label for="ana">ANA</label>
+            <select id="ana"><option value=""></option><option>positivo</option><option>negativo</option></select>
+          </div>
+          <div class="campo"><label for="edadInicio">Edad al inicio (años)</label><input type="number" id="edadInicio" inputmode="decimal" min="0" max="18" step="0.5"></div>
+        </div>
         <div class="campo"><label for="oftalmologia">Último control oftalmológico</label><input type="text" id="oftalmologia" placeholder="Ej.: 08/2026, sin uveítis"></div>
+        <p id="uveitis" class="ayuda"></p>
       </section>
 
       <section class="panel">
@@ -111,6 +140,7 @@
       <section class="panel">
         <h2>Plan</h2>
         <div class="campo"><label for="plan">Plan</label><textarea id="plan" rows="3"></textarea></div>
+        <div class="frases" data-campo="plan"></div>
         <div class="campo"><label for="proximoControl">Próximo control</label><input type="text" id="proximoControl" placeholder="Ej.: 3 meses, con laboratorio"></div>
       </section>
     </form>
