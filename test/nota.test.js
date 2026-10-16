@@ -47,7 +47,7 @@ test("nota completa incluye todas las secciones en orden", () => {
     "Articulaciones activas: 3 (rodilla der., tobillo izq., MCF 2 der.)",
     "Con limitación: 1 (rodilla der.)",
     "EGM 3/10 · EGP 4/10 · VSG 25 mm/h · PCR 2,5 mg/L",
-    "JADAS-10: 10,5 · cJADAS-10: 10",
+    "JADAS-10: 10,5 · cJADAS-10: 10 (actividad moderada)",
     "Último control oftalmológico: 08/2026, sin uveítis",
     "Medicación: MTX 15 mg/sem SC",
     "Tolerancia buena, adherencia buena.",
@@ -84,4 +84,28 @@ test("primera consulta cambia el título e incluye la anamnesis", () => {
 
 test("en control no aparece la anamnesis aunque haya datos", () => {
   assert.doesNotMatch(generarNota({ tipo: "control", antFamiliares: "x" }), /Antecedentes/);
+});
+
+test("nivel de actividad según el curso oligo o poli", async () => {
+  const { actividad } = await import("../src/nota.js");
+  assert.equal(actividad(1, "AIJ oligoarticular persistente"), "enfermedad inactiva");
+  assert.equal(actividad(3, "AIJ oligoarticular persistente"), "actividad moderada");
+  assert.equal(actividad(3, "AIJ poliarticular FR negativo"), "actividad baja");
+  assert.equal(actividad(16, "AIJ poliarticular FR positivo"), "actividad alta");
+  assert.equal(actividad(3, "AIJ sistémica"), null);
+});
+
+test("entesitis, dactilitis, campos de LES y pesquisa de uveítis en la nota", () => {
+  const texto = generarNota({
+    diagnostico: "Lupus eritematoso sistémico",
+    entesitis: "inserción del tendón de Aquiles bilateral",
+    dactilitis: "dedo del pie 2 der.",
+    les_sledai: "4",
+    les_pa: "105/65",
+  });
+  assert.match(texto, /Entesitis: inserción del tendón de Aquiles bilateral/);
+  assert.match(texto, /Dactilitis: dedo del pie 2 der\./);
+  assert.match(texto, /SLEDAI-2K: 4\nPresión arterial: 105\/65/);
+  const aij = generarNota({ diagnostico: "AIJ oligoarticular persistente", ana: "positivo", edadInicio: 3, tiempoEvolucion: "1 año" });
+  assert.match(aij, /Pesquisa de uveítis sugerida: cada 3 meses \(ANA positivo, inicio antes de los 7 años, hasta 4 años de evolución\)/);
 });

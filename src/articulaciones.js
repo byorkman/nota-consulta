@@ -61,6 +61,44 @@ function pies() {
 
 export const ARTICULACIONES = [...cuerpo(), ...manos(), ...pies()];
 
+// Sitios de entesis del miembro inferior (artritis relacionada con entesitis),
+// en la vista del cuerpo.
+function entesis() {
+  const sitios = [
+    ["trocanter", "trocánter mayor", 72, 214],
+    ["cuadriceps", "inserción del cuádriceps", 84, 266],
+    ["rotula", "polo inferior de la rótula", 84, 296],
+    ["tibia", "tuberosidad anterior de la tibia", 84, 310],
+    ["aquiles", "inserción del tendón de Aquiles", 94, 364],
+    ["plantar", "fascia plantar en el calcáneo", 82, 382],
+  ];
+  const lista = [];
+  for (const [id, grupo, x, y] of sitios) {
+    lista.push(art(`ent-${id}-D`, grupo, null, "D", "cuerpo", x, y));
+    lista.push(art(`ent-${id}-I`, grupo, null, "I", "cuerpo", 200 - x, y));
+  }
+  return lista;
+}
+
+export const ENTESIS = entesis();
+const ORDEN_ENTESIS = [...new Set(ENTESIS.map((e) => e.grupo))];
+
+// Dedos para marcar dactilitis (1 = pulgar o hallux).
+export const DEDOS = ["D", "I"].flatMap((lado) => [
+  ...[1, 2, 3, 4, 5].map((n) => art(`dedo-mano${n}-${lado}`, "dedo de la mano", n, lado, "manos")),
+  ...[1, 2, 3, 4, 5].map((n) => art(`dedo-pie${n}-${lado}`, "dedo del pie", n, lado, "pies")),
+]);
+const ORDEN_DEDOS = ["dedo de la mano", "dedo del pie"];
+
+// Dedo al que pertenece una articulación de la mano o del pie, o null.
+export function dedoDe(id) {
+  const mano = /^(?:mcf|ifp|ifd)(\d)-([DI])$/.exec(id);
+  if (mano) return `dedo-mano${mano[1]}-${mano[2]}`;
+  const pie = /^(?:mtf|ifpie)(\d)-([DI])$/.exec(id);
+  if (pie) return `dedo-pie${pie[1]}-${pie[2]}`;
+  return null;
+}
+
 // Orden en que se describen los grupos.
 const ORDEN = [
   "ATM", "columna cervical", "esternoclavicular", "acromioclavicular", "hombro", "codo",
@@ -77,10 +115,10 @@ function unirNumeros(nums) {
 
 // ids: Set o array de ids marcados. Devuelve un texto como
 // "rodilla der., tobillos bilateral, MCF 2 y 3 der."
-export function describir(ids) {
-  const marcadas = ARTICULACIONES.filter((a) => (ids.has ? ids.has(a.id) : ids.includes(a.id)));
+export function describir(ids, lista = ARTICULACIONES, orden = ORDEN) {
+  const marcadas = lista.filter((a) => (ids.has ? ids.has(a.id) : ids.includes(a.id)));
   const partes = [];
-  for (const grupo of ORDEN) {
+  for (const grupo of orden) {
     const delGrupo = marcadas.filter((a) => a.grupo === grupo);
     if (!delGrupo.length) continue;
     if (delGrupo[0].lado === null) {
@@ -108,12 +146,18 @@ export function describir(ids) {
   return partes.join(", ");
 }
 
-// estado: { activas: Set, limitadas: Set }. Devuelve los datos para la nota.
-export function resumen({ activas, limitadas }) {
+export const describirEntesis = (ids) => describir(ids, ENTESIS, ORDEN_ENTESIS);
+export const describirDactilitis = (ids) => describir(ids, DEDOS, ORDEN_DEDOS);
+
+// marcas: { activas, limitadas, entesis, dactilitis }, cada una un Set.
+// Devuelve los datos para la nota.
+export function resumen({ activas, limitadas, entesis = new Set(), dactilitis = new Set() }) {
   return {
     activas: activas.size,
     limitadas: limitadas.size,
     detalleActivas: describir(activas),
     detalleLimitadas: describir(limitadas),
+    entesitis: describirEntesis(entesis),
+    dactilitis: describirDactilitis(dactilitis),
   };
 }
