@@ -1,6 +1,6 @@
 {
   "name": "nota-consulta",
-  "version": "1.0.0",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
   "description": "Plantilla de nota de consulta de reumatología pediátrica",
